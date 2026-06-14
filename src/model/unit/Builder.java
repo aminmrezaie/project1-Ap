@@ -35,7 +35,7 @@ public class Builder extends Unit {
         if (!spendAP(apCost)) return false;
 
         charges--;
-        if (charges == 0) consume();   // Builder is exhausted → removed from map
+        if (charges == 0) consume();
         return true;
     }
 

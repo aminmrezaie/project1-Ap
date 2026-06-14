@@ -18,10 +18,10 @@ public class BorderExpander extends Unit {
     public List<Position> expand(Position targetCenter) {
         if (!spendAP(EXPAND_AP_COST)) return null;
 
-        // Build the 7-hex cluster: center + 6 neighbors
+
         List<Position> cluster = targetCenter.positionsInRadius(1);
 
-        consume();  // one-time use → removed from map
+        consume();
         return cluster;
     }
 }
