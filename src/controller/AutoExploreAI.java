@@ -40,8 +40,8 @@ public class AutoExploreAI {
     }
 
     private Position findNearestFrontier(Position start, GameMap map) {
-        Queue<Position> queue = new LinkedList<>();
-        Set<Position> visited = new HashSet<>();
+        Queue<Position> queue   = new LinkedList<>();
+        Set<Position>   visited = new HashSet<>();
         queue.add(start);
         visited.add(start);
 

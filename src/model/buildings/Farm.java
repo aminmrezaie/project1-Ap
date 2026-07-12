@@ -5,6 +5,7 @@ import model.enums.Position;
 import model.enums.ResourceType;
 
 public class Farm extends ProductionBuilding {
+
     private static final int DEFAULT_RATE = 3;
     private static final int MAX_WORKERS  = 4;
     private static final int UPKEEP_COST  = 1;

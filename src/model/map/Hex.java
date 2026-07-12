@@ -5,15 +5,22 @@ import model.enums.Position;
 import model.enums.ResourceType;
 import model.enums.TerrainType;
 
+
 public class Hex {
 
     private final Position position;
     private final TerrainType terrain;
+
     private ResourceType resource;
+
     private Building building;
+
     private boolean visible;
+
     private boolean explored;
+
     private boolean owned;
+
     private boolean resourceDepleted;
 
     public Hex(Position position, TerrainType terrain, ResourceType resource) {
@@ -29,6 +36,7 @@ public class Hex {
     public Hex(Position position, TerrainType terrain) {
         this(position, terrain, null);
     }
+
 
     public Position getPosition() {
         return position;
@@ -69,6 +77,7 @@ public class Hex {
     public boolean isResourceDepleted() {
         return resourceDepleted;
     }
+
 
     public void setBuilding(Building building) {
         if (this.building != null) {

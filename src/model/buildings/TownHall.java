@@ -8,14 +8,22 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class TownHall extends Building {
+
+
     private int storageCapacity;
     private static final int BASE_STORAGE = 100;
+
+
     private int unitCap;
     private static final int BASE_UNIT_CAP = 5;
+
     private final Deque<String> productionQueue;
     private int turnsRemainingForCurrent;
+
+
     private static final int SAFEGUARD_FOOD = 1;
     private static final int SAFEGUARD_WOOD = 1;
+
 
     public TownHall(Position position) {
         super(BuildingType.TOWN_HALL, position);
@@ -24,6 +32,7 @@ public class TownHall extends Building {
         this.productionQueue = new ArrayDeque<>();
         this.turnsRemainingForCurrent = 0;
     }
+
 
     @Override
     public int getMaxWorkers() {
@@ -45,6 +54,7 @@ public class TownHall extends Building {
         return null;
     }
 
+
     public int getSafeguardFood() {
         return SAFEGUARD_FOOD;
     }
@@ -52,6 +62,7 @@ public class TownHall extends Building {
     public int getSafeguardWood() {
         return SAFEGUARD_WOOD;
     }
+
 
     public int getStorageCapacity() {
         return storageCapacity;
@@ -62,6 +73,7 @@ public class TownHall extends Building {
         this.storageCapacity += additionalCapacity;
     }
 
+
     public int getUnitCap() {
         return unitCap;
     }
@@ -70,6 +82,7 @@ public class TownHall extends Building {
         if (amount <= 0) throw new IllegalArgumentException("Must be > 0");
         this.unitCap += amount;
     }
+
 
     public void enqueueUnit(String unitTypeName) {
         productionQueue.addLast(unitTypeName);

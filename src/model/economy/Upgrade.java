@@ -5,6 +5,7 @@ import model.enums.ResourceType;
 import java.util.Map;
 
 public class Upgrade {
+
     public enum UpgradeId {
         STORAGE_UPGRADE_1,
         STORAGE_UPGRADE_2,
@@ -22,32 +23,20 @@ public class Upgrade {
 
     public Upgrade(UpgradeId id, String name, String description,
                    Map<ResourceType, Integer> cost) {
-        this.id = id;
-        this.name = name;
+        this.id          = id;
+        this.name        = name;
         this.description = description;
-        this.cost = cost;
-        this.unlocked = false;
+        this.cost        = cost;
+        this.unlocked    = false;
     }
 
-    public UpgradeId getId() {
-        return id;
-    }
 
-    public String getName() {
-        return name;
-    }
+    public UpgradeId getId()          { return id; }
+    public String getName()           { return name; }
+    public String getDescription()    { return description; }
+    public Map<ResourceType, Integer> getCost() { return cost; }
+    public boolean isUnlocked()       { return unlocked; }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public Map<ResourceType, Integer> getCost() {
-        return cost;
-    }
-
-    public boolean isUnlocked() {
-        return unlocked;
-    }
 
     public void unlock() {
         if (unlocked) throw new IllegalStateException(name + " is already unlocked");

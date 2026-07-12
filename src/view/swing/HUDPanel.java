@@ -15,18 +15,21 @@ import java.util.List;
 
 public class HUDPanel extends JPanel {
 
+    private static final long serialVersionUID = 1L;
+
     private static final int HEIGHT = 64;
 
 
-    private final JPanel resourceBar;
-    private final JLabel turnLabel;
-    private final JLabel unitCapLabel;
-    private final JLabel productionLabel;
+    private final JPanel  resourceBar;
+    private final JLabel  turnLabel;
+    private final JLabel  unitCapLabel;
+    private final JLabel  productionLabel;
     private final JButton endTurnButton;
-    private final JLabel warningLabel;
+    private final JLabel  warningLabel;
 
     private final JLabel notifLabel;
-    private Timer notifTimer;
+    private Timer        notifTimer;
+
 
     private ActionListener endTurnListener;
 
@@ -43,9 +46,9 @@ public class HUDPanel extends JPanel {
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         centerPanel.setOpaque(false);
 
-        turnLabel = styledLabel("Turn: 1", GameWindow.GOLD, 13, Font.BOLD);
-        unitCapLabel = styledLabel("Units: 0/5", GameWindow.TEXT_PRIMARY, 12, Font.PLAIN);
-        productionLabel = styledLabel("Idle", GameWindow.TEXT_DIM, 11, Font.ITALIC);
+        turnLabel       = styledLabel("Turn: 1",   GameWindow.GOLD,         13, Font.BOLD);
+        unitCapLabel    = styledLabel("Units: 0/5", GameWindow.TEXT_PRIMARY, 12, Font.PLAIN);
+        productionLabel = styledLabel("Idle",       GameWindow.TEXT_DIM,     11, Font.ITALIC);
         centerPanel.add(turnLabel);
         centerPanel.add(unitCapLabel);
         centerPanel.add(productionLabel);
@@ -54,7 +57,7 @@ public class HUDPanel extends JPanel {
         rightPanel.setOpaque(false);
 
         warningLabel = styledLabel("", GameWindow.RED_ALERT, 11, Font.BOLD);
-        notifLabel = styledLabel("", GameWindow.GREEN_OK, 11, Font.BOLD);
+        notifLabel   = styledLabel("", GameWindow.GREEN_OK,  11, Font.BOLD);
 
         endTurnButton = new JButton("End Turn ▶");
         styleButton(endTurnButton);
@@ -66,9 +69,9 @@ public class HUDPanel extends JPanel {
         rightPanel.add(warningLabel);
         rightPanel.add(endTurnButton);
 
-        add(resourceBar, BorderLayout.WEST);
-        add(centerPanel, BorderLayout.CENTER);
-        add(rightPanel, BorderLayout.EAST);
+        add(resourceBar,  BorderLayout.WEST);
+        add(centerPanel,  BorderLayout.CENTER);
+        add(rightPanel,   BorderLayout.EAST);
     }
 
 
@@ -119,17 +122,17 @@ public class HUDPanel extends JPanel {
         p.setOpaque(false);
 
         String icon = switch (rd.type) {
-            case FOOD -> "🌾";
-            case WOOD -> "🪵";
+            case FOOD  -> "🌾";
+            case WOOD  -> "🪵";
             case STONE -> "⛏";
-            case IRON -> "⚙";
+            case IRON  -> "⚙";
         };
 
         JLabel iconLbl = styledLabel(icon, Color.WHITE, 14, Font.PLAIN);
 
         String sign = rd.netRate >= 0 ? "+" : "";
         String text = rd.current + "/" + rd.capacity + " " + sign + rd.netRate;
-        Color netColor = rd.netRate < 0 ? GameWindow.RED_ALERT
+        Color  netColor = rd.netRate < 0 ? GameWindow.RED_ALERT
                 : rd.netRate > 0 ? GameWindow.GREEN_OK
                 : GameWindow.TEXT_DIM;
         JLabel valueLbl = styledLabel(text, netColor, 11, Font.BOLD);
@@ -141,28 +144,25 @@ public class HUDPanel extends JPanel {
     }
 
 
+
     public void showNotification(String message, NotificationType type) {
         Color color = switch (type) {
-            case INFO -> GameWindow.TEAL;
+            case INFO    -> GameWindow.TEAL;
             case SUCCESS -> GameWindow.GREEN_OK;
             case WARNING -> GameWindow.GOLD;
-            case CRISIS -> GameWindow.RED_ALERT;
+            case CRISIS  -> GameWindow.RED_ALERT;
         };
         notifLabel.setText(message);
         notifLabel.setForeground(color);
 
         if (notifTimer != null && notifTimer.isRunning()) notifTimer.stop();
-        notifTimer = new Timer(3000, e -> {
-            notifLabel.setText("");
-        });
+        notifTimer = new Timer(3000, e -> { notifLabel.setText(""); });
         notifTimer.setRepeats(false);
         notifTimer.start();
     }
 
 
-    public void setEndTurnListener(ActionListener l) {
-        this.endTurnListener = l;
-    }
+    public void setEndTurnListener(ActionListener l) { this.endTurnListener = l; }
 
 
     private static JLabel styledLabel(String text, Color color, int size, int style) {

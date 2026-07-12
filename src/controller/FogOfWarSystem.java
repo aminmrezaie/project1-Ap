@@ -8,10 +8,10 @@ import model.buildings.Building;
 
 import java.util.Collection;
 
-
 public class FogOfWarSystem {
 
     private static final int BUILDING_VISION_RADIUS = 2;
+
 
     public void updateVisibility(GameMap map,
                                  Collection<Unit> units,

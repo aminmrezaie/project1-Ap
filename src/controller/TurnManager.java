@@ -31,7 +31,7 @@ public class TurnManager {
         public final int turnNumber;
         public final ProductionSystem.ProductionReport production;
         public final boolean starvationTriggered;
-        public final String unitProduced;
+        public final String unitProduced;          // نام یونیت تولید‌شده، یا null
         public final List<Building> destroyedBuildings;
 
         public TurnReport(int turnNumber, ProductionSystem.ProductionReport production,
@@ -53,6 +53,7 @@ public class TurnManager {
 
         List<Building> destroyed = trackNeglect(empire);
 
+
         String unitProduced = productionSystem.tickUnitProduction(empire);
 
         boolean starving = empire.isStarving();
@@ -61,6 +62,7 @@ public class TurnManager {
         }
 
         empire.removeDeadUnits();
+
 
         currentTurn++;
 
@@ -74,9 +76,7 @@ public class TurnManager {
                 unit.applyStarvationPenalty();
             }
         }
-
     }
-
 
     private List<Building> trackNeglect(Empire empire) {
         List<Building> destroyed = new ArrayList<>();
@@ -89,8 +89,6 @@ public class TurnManager {
             }
 
             boolean hadEnough = empire.getStorage().get(b.getUpkeepResourceType()) >= 0;
-
-
             if (empire.getStorage().get(b.getUpkeepResourceType()) < 0) {
                 int streak = unpaidUpkeepStreak.merge(b, 1, Integer::sum);
                 if (streak >= NEGLECT_LIMIT) {

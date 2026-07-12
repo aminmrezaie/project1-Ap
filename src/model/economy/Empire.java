@@ -6,7 +6,11 @@ import model.enums.Position;
 import model.enums.ResourceType;
 import model.unit.Unit;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Empire {
 
@@ -16,6 +20,7 @@ public class Empire {
     private final List<Unit> units;
     private final List<Building> buildings;
     private final Set<Position> territory;
+
 
     public Empire(TownHall townHall, int initialStorageCapacity) {
         this.townHall = townHall;
@@ -27,6 +32,7 @@ public class Empire {
         buildings.add(townHall);
         territory.add(townHall.getPosition());
     }
+
 
     public ResourceStorage getStorage() {
         return storage;
@@ -47,6 +53,7 @@ public class Empire {
     public boolean isStarving() {
         return storage.isStarving();
     }
+
 
     public List<Unit> getUnits() {
         return Collections.unmodifiableList(units);
@@ -78,6 +85,7 @@ public class Empire {
         units.remove(unit);
     }
 
+
     public List<Building> getBuildings() {
         return Collections.unmodifiableList(buildings);
     }
@@ -94,6 +102,7 @@ public class Empire {
         return townHall;
     }
 
+
     public Set<Position> getTerritory() {
         return Collections.unmodifiableSet(territory);
     }
@@ -109,7 +118,6 @@ public class Empire {
     public void addAllToTerritory(List<Position> positions) {
         territory.addAll(positions);
     }
-
     public void refreshAllUnitAP() {
         units.stream().filter(Unit::isAlive).forEach(Unit::refreshAP);
     }

@@ -13,7 +13,9 @@ import java.util.Map;
 
 public class MinimapPanel extends JPanel {
 
-    public static final int WIDTH = Minimap.DEFAULT_WIDTH;
+    private static final long serialVersionUID = 1L;
+
+    public static final int WIDTH  = Minimap.DEFAULT_WIDTH;
     public static final int HEIGHT = Minimap.DEFAULT_HEIGHT;
 
     private final Minimap minimap;
@@ -33,8 +35,7 @@ public class MinimapPanel extends JPanel {
         setBorder(BorderFactory.createLineBorder(GameWindow.BORDER_COLOR, 1));
 
         addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
+            @Override public void mouseClicked(MouseEvent e) {
                 Position pos = minimap.onClick(e.getX(), e.getY());
                 if (pos != null && clickListener != null) {
                     clickListener.onMinimapClicked(pos);
@@ -81,7 +82,7 @@ public class MinimapPanel extends JPanel {
 
         if (snapshot.viewportCenter != null) {
             int[] vc = minimap.hexToPixel(snapshot.viewportCenter);
-            int vw = WIDTH / 4;
+            int vw = WIDTH  / 4;
             int vh = HEIGHT / 4;
             g2.setColor(new Color(0xffffff88, true));
             g2.setStroke(new BasicStroke(1f));
@@ -91,6 +92,7 @@ public class MinimapPanel extends JPanel {
         g2.setColor(GameWindow.BORDER_COLOR);
         g2.drawRect(0, 0, WIDTH - 1, HEIGHT - 1);
 
+
         g2.setFont(new Font("SansSerif", Font.BOLD, 9));
         g2.setColor(GameWindow.TEXT_DIM);
         g2.drawString("MAP", 4, 10);
@@ -99,7 +101,5 @@ public class MinimapPanel extends JPanel {
     }
 
 
-    public void setClickListener(MinimapClickListener l) {
-        this.clickListener = l;
-    }
+    public void setClickListener(MinimapClickListener l) { this.clickListener = l; }
 }

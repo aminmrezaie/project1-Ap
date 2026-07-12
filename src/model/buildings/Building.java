@@ -3,21 +3,25 @@ package model.buildings;
 import model.enums.BuildingType;
 import model.enums.Position;
 import model.enums.ResourceType;
+import model.unit.Worker;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public abstract class Building {
+
     private final BuildingType type;
     private final Position position;
-    private final List<Object> workers;
+
+    private final List<Worker> workers;
 
     public Building(BuildingType type, Position position) {
         this.type = type;
         this.position = position;
         this.workers = new ArrayList<>();
     }
+
 
     public BuildingType getType() {
         return type;
@@ -26,6 +30,7 @@ public abstract class Building {
     public Position getPosition() {
         return position;
     }
+
 
     public abstract int getMaxWorkers();
 
@@ -41,26 +46,31 @@ public abstract class Building {
         return !workers.isEmpty();
     }
 
-    public boolean addWorker(Object worker) {
+    public boolean addWorker(Worker worker) {
         if (isFull()) return false;
         workers.add(worker);
         return true;
     }
 
-    public boolean removeWorker(Object worker) {
+    public boolean removeWorker(Worker worker) {
         return workers.remove(worker);
     }
 
-    public List<Object> getWorkers() {
+    public List<Worker> getWorkers() {
         return Collections.unmodifiableList(workers);
     }
+
 
     public ResourceType getUpkeepResourceType() {
         return ResourceType.WOOD;
     }
 
+
     public abstract int getUpkeepCost();
+
+
     public abstract int getProduction();
+
     public abstract ResourceType getProducedResource();
 
     public boolean isActive() {
@@ -72,7 +82,4 @@ public abstract class Building {
         return type.getDisplayName() + "@" + position
                 + "[workers=" + workers.size() + "/" + getMaxWorkers() + "]";
     }
-
-
-
 }

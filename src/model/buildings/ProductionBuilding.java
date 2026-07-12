@@ -5,17 +5,17 @@ import model.enums.Position;
 import model.enums.ResourceType;
 
 public abstract class ProductionBuilding extends Building {
+
     private final ResourceType producedResource;
     private int baseProductionRate;
 
-    public ProductionBuilding(BuildingType type,
-                              Position position,
-                              ResourceType producedResource,
-                              int baseProductionRate) {
+    public ProductionBuilding(BuildingType type, Position position,
+                              ResourceType producedResource, int baseProductionRate) {
         super(type, position);
         this.producedResource = producedResource;
         this.baseProductionRate = baseProductionRate;
     }
+
 
     @Override
     public ResourceType getProducedResource() {

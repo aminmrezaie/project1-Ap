@@ -11,12 +11,9 @@ import model.enums.ResourceType;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ProductionSystem {
 
-
     private static final int FOOD_PER_UNIT = 1;
-
 
 
     public static class ProductionReport {
@@ -83,7 +80,7 @@ public class ProductionSystem {
         empire.getStorage().forceDeduct(ResourceType.FOOD, foodConsumed);
 
         for (Building b : new ArrayList<>(empire.getBuildings())) {
-            if (b instanceof TownHall) continue;
+            if (b instanceof TownHall) continue;  // TownHall has no upkeep
             int cost = b.getUpkeepCost();
             if (cost == 0) continue;
 
@@ -93,11 +90,9 @@ public class ProductionSystem {
             if (upkeepType == ResourceType.WOOD)  upkeepWood  += cost;
             if (upkeepType == ResourceType.STONE) upkeepStone += cost;
 
-
             if (!paid) {
             }
         }
-
 
         updateNetRates(empire, foodProduced, woodProduced, stoneProduced, ironProduced,
                 foodConsumed, upkeepWood, upkeepStone);
@@ -115,7 +110,6 @@ public class ProductionSystem {
         empire.getStorage().setNetRate(ResourceType.STONE, sp - us);
         empire.getStorage().setNetRate(ResourceType.IRON,  ip);
     }
-
 
     public String tickUnitProduction(Empire empire) {
         return empire.getTownHall().tickProduction();

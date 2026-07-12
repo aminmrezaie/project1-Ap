@@ -5,10 +5,10 @@ import model.enums.ResourceType;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
-
 public class ResourceStorage {
+
     private final Map<ResourceType, Integer> amounts;
-    private final Map<ResourceType, Integer> netRates;
+    private final Map<ResourceType, Integer> netRates; // net per turn (can be negative)
     private int capacity;
 
     public ResourceStorage(int capacity) {
@@ -20,7 +20,6 @@ public class ResourceStorage {
             netRates.put(rt, 0);
         }
     }
-
     public int get(ResourceType type) {
         return amounts.getOrDefault(type, 0);
     }
@@ -43,11 +42,13 @@ public class ResourceStorage {
         return Collections.unmodifiableMap(amounts);
     }
 
+
     public void add(ResourceType type, int amount) {
         if (amount < 0) throw new IllegalArgumentException("Amount must be >= 0");
         int current = amounts.get(type);
         amounts.put(type, Math.min(current + amount, capacity));
     }
+
 
     public boolean consume(ResourceType type, int amount) {
         if (amount < 0) throw new IllegalArgumentException("Amount must be >= 0");
@@ -66,6 +67,7 @@ public class ResourceStorage {
         return amounts.getOrDefault(type, 0) >= amount;
     }
 
+
     public void setNetRate(ResourceType type, int rate) {
         netRates.put(type, rate);
     }
@@ -78,9 +80,11 @@ public class ResourceStorage {
         return Collections.unmodifiableMap(netRates);
     }
 
+
     public boolean isStarving() {
         return amounts.getOrDefault(ResourceType.FOOD, 0) < 0;
     }
+
 
     @Override
     public String toString() {
@@ -93,5 +97,4 @@ public class ResourceStorage {
         sb.append("}");
         return sb.toString();
     }
-
 }

@@ -10,7 +10,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class HUD {
 
 
@@ -22,12 +21,13 @@ public class HUD {
         public final boolean isNegative;
 
         public ResourceDisplay(ResourceType type, int current, int capacity, int netRate) {
-            this.type = type;
-            this.current = current;
-            this.capacity = capacity;
-            this.netRate = netRate;
+            this.type       = type;
+            this.current    = current;
+            this.capacity   = capacity;
+            this.netRate    = netRate;
             this.isNegative = netRate < 0;
         }
+
 
         public String format() {
             String sign = netRate >= 0 ? "+" : "";
@@ -42,18 +42,14 @@ public class HUD {
         public final Map<UnitType, Integer> byType;
 
         public UnitCountDisplay(int total, int cap, Map<UnitType, Integer> byType) {
-            this.total = total;
-            this.cap = cap;
+            this.total  = total;
+            this.cap    = cap;
             this.byType = byType;
         }
 
-        public String formatTotal() {
-            return total + " / " + cap;
-        }
+        public String formatTotal() { return total + " / " + cap; }
 
-        public boolean isAtCap() {
-            return total >= cap;
-        }
+        public boolean isAtCap() { return total >= cap; }
     }
 
 
@@ -64,13 +60,11 @@ public class HUD {
 
         public ProductionQueueDisplay(String currentItemName, int turnsRemaining, int queueSize) {
             this.currentItemName = currentItemName;
-            this.turnsRemaining = turnsRemaining;
-            this.queueSize = queueSize;
+            this.turnsRemaining  = turnsRemaining;
+            this.queueSize       = queueSize;
         }
 
-        public boolean isProducing() {
-            return currentItemName != null;
-        }
+        public boolean isProducing() { return currentItemName != null; }
 
         public String format() {
             if (!isProducing()) return "Idle";
@@ -95,10 +89,11 @@ public class HUD {
         public final String message;
 
         public Warning(WarningType type, String message) {
-            this.type = type;
+            this.type    = type;
             this.message = message;
         }
     }
+
 
 
     private int currentTurn;
@@ -106,16 +101,14 @@ public class HUD {
     private UnitCountDisplay unitCount;
     private ProductionQueueDisplay productionQueue;
     private List<Warning> activeWarnings;
-    private boolean endTurnLocked;
-    private boolean idleUnitWarning;
-
+    private boolean endTurnLocked;   // locked while modal/action is open
+    private boolean idleUnitWarning; // true if any unit still has AP unused
 
     public static HUD buildFrom(Empire empire, int currentTurn,
                                 List<Unit> idleUnitsWithAP) {
         HUD hud = new HUD();
         hud.currentTurn = currentTurn;
 
-        // Resources
         ResourceStorage storage = empire.getStorage();
         hud.resources = new java.util.ArrayList<>();
         for (ResourceType rt : ResourceType.values()) {
@@ -135,8 +128,8 @@ public class HUD {
         hud.unitCount = new UnitCountDisplay(empire.getUnitCount(), empire.getUnitCap(), byType);
 
         String producing = empire.getTownHall().currentProduction();
-        int turnsLeft = empire.getTownHall().getTurnsRemainingForCurrent();
-        int queueSize = empire.getTownHall().getQueueSize();
+        int turnsLeft    = empire.getTownHall().getTurnsRemainingForCurrent();
+        int queueSize    = empire.getTownHall().getQueueSize();
         hud.productionQueue = new ProductionQueueDisplay(producing, turnsLeft, queueSize);
 
         hud.activeWarnings = new java.util.ArrayList<>();
@@ -151,47 +144,23 @@ public class HUD {
         }
 
         hud.idleUnitWarning = idleUnitsWithAP != null && !idleUnitsWithAP.isEmpty();
-        hud.endTurnLocked = false;
+        hud.endTurnLocked   = false;
 
         return hud;
     }
 
 
-    public int getCurrentTurn() {
-        return currentTurn;
-    }
+    public int getCurrentTurn()                       { return currentTurn; }
+    public List<ResourceDisplay> getResources()       { return resources; }
+    public UnitCountDisplay getUnitCount()            { return unitCount; }
+    public ProductionQueueDisplay getProductionQueue(){ return productionQueue; }
+    public List<Warning> getActiveWarnings()          { return activeWarnings; }
+    public boolean isEndTurnLocked()                  { return endTurnLocked; }
+    public boolean hasIdleUnitWarning()               { return idleUnitWarning; }
 
-    public List<ResourceDisplay> getResources() {
-        return resources;
-    }
+    public void setEndTurnLocked(boolean locked) { this.endTurnLocked = locked; }
 
-    public UnitCountDisplay getUnitCount() {
-        return unitCount;
-    }
-
-    public ProductionQueueDisplay getProductionQueue() {
-        return productionQueue;
-    }
-
-    public List<Warning> getActiveWarnings() {
-        return activeWarnings;
-    }
-
-    public boolean isEndTurnLocked() {
-        return endTurnLocked;
-    }
-
-    public boolean hasIdleUnitWarning() {
-        return idleUnitWarning;
-    }
-
-    public void setEndTurnLocked(boolean locked) {
-        this.endTurnLocked = locked;
-    }
-
-    public boolean hasWarnings() {
-        return !activeWarnings.isEmpty();
-    }
+    public boolean hasWarnings() { return !activeWarnings.isEmpty(); }
 
     public boolean hasCrisis() {
         return activeWarnings.stream()

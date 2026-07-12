@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 public class UnitPanel {
 
 
@@ -30,12 +29,12 @@ public class UnitPanel {
     public static class ActionButton {
         public final Action action;
         public final String label;
-        public final boolean enabled;
+        public final boolean enabled;   // false = greyed out (not enough AP / invalid state)
         public final String tooltip;
 
         public ActionButton(Action action, String label, boolean enabled, String tooltip) {
-            this.action = action;
-            this.label = label;
+            this.action  = action;
+            this.label   = label;
             this.enabled = enabled;
             this.tooltip = tooltip;
         }
@@ -55,14 +54,14 @@ public class UnitPanel {
 
 
     public UnitPanel() {
-        this.visible = false;
+        this.visible       = false;
         this.actionButtons = Collections.emptyList();
     }
 
 
     public void selectUnit(Unit unit) {
         this.selectedUnit = unit;
-        this.visible = unit != null;
+        this.visible      = unit != null;
         this.actionButtons = unit != null ? buildButtons(unit) : Collections.emptyList();
     }
 
@@ -177,19 +176,24 @@ public class UnitPanel {
 
         List<BuildingType> options = new ArrayList<>();
         switch (targetHex.getTerrain()) {
-            case FOREST -> options.add(BuildingType.LUMBER_MILL);
+            case FOREST   -> options.add(BuildingType.LUMBER_MILL);
             case MOUNTAIN -> {
-                if (stoneTechUnlocked) options.add(BuildingType.STONE_MINE);
-                if (ironTechUnlocked && targetHex.getResource() ==
-                        model.enums.ResourceType.IRON) {
+                if (stoneTechUnlocked && targetHex.getResource() == model.enums.ResourceType.STONE) {
+                    options.add(BuildingType.STONE_MINE);
+                }
+                if (ironTechUnlocked && targetHex.getResource() == model.enums.ResourceType.IRON) {
                     options.add(BuildingType.IRON_MINE);
                 }
             }
             case FARMLAND -> options.add(BuildingType.FARM);
-            case PLAIN -> {
-                if (targetHex.hasResource()) options.add(BuildingType.STABLE);
-                options.add(BuildingType.VILLAGE);
-                options.add(BuildingType.TOWN);
+            case PLAIN    -> {
+                if (targetHex.hasResource()) {
+                    options.add(BuildingType.STABLE);
+                } else {
+
+                    options.add(BuildingType.VILLAGE);
+                    options.add(BuildingType.TOWN);
+                }
             }
         }
         return Collections.unmodifiableList(options);
@@ -202,23 +206,9 @@ public class UnitPanel {
     }
 
 
-    public Unit getSelectedUnit() {
-        return selectedUnit;
-    }
-
-    public List<ActionButton> getButtons() {
-        return actionButtons;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public boolean hasSelection() {
-        return selectedUnit != null;
-    }
-
-    public void setListener(PanelListener l) {
-        this.listener = l;
-    }
+    public Unit getSelectedUnit()           { return selectedUnit; }
+    public List<ActionButton> getButtons()  { return actionButtons; }
+    public boolean isVisible()              { return visible; }
+    public boolean hasSelection()           { return selectedUnit != null; }
+    public void setListener(PanelListener l){ this.listener = l; }
 }

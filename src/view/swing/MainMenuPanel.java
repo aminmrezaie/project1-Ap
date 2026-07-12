@@ -10,9 +10,12 @@ import java.awt.geom.Rectangle2D;
 
 public class MainMenuPanel extends JPanel {
 
+
+    private static final long serialVersionUID = 1L;
+
     private final MainMenu model;
 
-    private static final Color BG_TOP = new Color(0x0d0d1a);
+    private static final Color BG_TOP    = new Color(0x0d0d1a);
     private static final Color BG_BOTTOM = new Color(0x16213e);
 
 
@@ -29,11 +32,11 @@ public class MainMenuPanel extends JPanel {
 
     private void buildContent() {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 0, 10, 0);
-        gbc.weightx = 0.0;
-        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.gridx    = 0;
+        gbc.fill     = GridBagConstraints.HORIZONTAL;
+        gbc.insets   = new Insets(10, 0, 10, 0);
+        gbc.weightx  = 0.0;
+        gbc.anchor   = GridBagConstraints.CENTER;
 
         JLabel title = new JLabel("CIVILIZATION", SwingConstants.CENTER);
         title.setFont(new Font("Serif", Font.BOLD, 52));
@@ -52,13 +55,18 @@ public class MainMenuPanel extends JPanel {
         gbc.insets = new Insets(6, 80, 6, 80);
 
         gbc.gridy = 2;
-        add(menuButton("▶  Start Game", GameWindow.GOLD, e -> model.onItemSelected(MenuItem.START)), gbc);
-
+        add(menuButton("▶️  Start Game", GameWindow.GOLD, e -> {
+            model.onItemSelected(MenuItem.START);
+            Window window = SwingUtilities.getWindowAncestor(MainMenuPanel.this);
+            if (window != null) {
+                window.dispose();
+            }
+        }), gbc);
         gbc.gridy = 3;
-        add(menuButton("⚙  Settings", GameWindow.TEAL, e -> showSettings()), gbc);
+        add(menuButton("⚙  Settings",   GameWindow.TEAL, e -> showSettings()), gbc);
 
         gbc.gridy = 4;
-        add(menuButton("✕  Exit", GameWindow.RED_ALERT, e -> showExitDialog()), gbc);
+        add(menuButton("✕  Exit",        GameWindow.RED_ALERT, e -> showExitDialog()), gbc);
     }
 
 
@@ -87,16 +95,13 @@ public class MainMenuPanel extends JPanel {
         lbl.setForeground(GameWindow.TEXT_PRIMARY);
         lbl.setFont(new Font("SansSerif", Font.BOLD, 13));
 
-        JSlider slider = new JSlider(0, 100, (int) (model.getMusicVolume() * 100));
+        JSlider slider = new JSlider(0, 100, (int)(model.getMusicVolume() * 100));
         slider.setOpaque(false);
         slider.setForeground(GameWindow.GOLD);
         slider.addChangeListener(e -> model.setMusicVolume(slider.getValue() / 100f));
 
         JButton close = new JButton("Close");
-        close.addActionListener(e -> {
-            model.onSettingsClosed();
-            dialog.dispose();
-        });
+        close.addActionListener(e -> { model.onSettingsClosed(); dialog.dispose(); });
         styleDialogButton(close);
 
         panel.add(lbl);
@@ -126,24 +131,18 @@ public class MainMenuPanel extends JPanel {
         btns.setOpaque(false);
 
         JButton yes = new JButton("Exit");
-        JButton no = new JButton("Cancel");
+        JButton no  = new JButton("Cancel");
         yes.setForeground(GameWindow.RED_ALERT);
         no.setForeground(GameWindow.TEXT_PRIMARY);
         styleDialogButton(yes);
         styleDialogButton(no);
 
-        yes.addActionListener(e -> {
-            model.onExitConfirmed();
-            dialog.dispose();
-        });
-        no.addActionListener(e -> {
-            model.onExitCancelled();
-            dialog.dispose();
-        });
+        yes.addActionListener(e -> { model.onExitConfirmed(); dialog.dispose(); });
+        no.addActionListener(e  -> { model.onExitCancelled(); dialog.dispose(); });
 
         btns.add(yes);
         btns.add(no);
-        panel.add(msg, BorderLayout.CENTER);
+        panel.add(msg,  BorderLayout.CENTER);
         panel.add(btns, BorderLayout.SOUTH);
         dialog.add(panel);
         dialog.setVisible(true);
@@ -152,8 +151,7 @@ public class MainMenuPanel extends JPanel {
 
     private static JButton menuButton(String text, Color accent, ActionListener action) {
         JButton btn = new JButton(text) {
-            @Override
-            protected void paintComponent(Graphics g) {
+            @Override protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 Color bg = getModel().isRollover()

@@ -8,33 +8,39 @@ import java.util.List;
 
 public class ViewManager {
 
-    private final MainMenu mainMenu;
-    private final HUD hud;
-    private final Minimap minimap;
-    private final UnitPanel unitPanel;
-    private final Camera camera;
+
+
+    private final MainMenu        mainMenu;
+    private final HUD             hud;           // computed each render from Empire
+    private final Minimap         minimap;
+    private final UnitPanel       unitPanel;
+    private final Camera          camera;
     private final NotificationOverlay notifications;
 
-    public enum Scene {MAIN_MENU, GAME}
+
+    public enum Scene { MAIN_MENU, GAME }
 
     private Scene currentScene;
 
+
     public ViewManager(int viewportWidth, int viewportHeight) {
-        this.mainMenu = new MainMenu();
-        this.hud = new HUD();
-        this.minimap = new Minimap();
-        this.unitPanel = new UnitPanel();
-        this.camera = new Camera(viewportWidth, viewportHeight);
+        this.mainMenu      = new MainMenu();
+        this.hud           = new HUD();
+        this.minimap       = new Minimap();
+        this.unitPanel     = new UnitPanel();
+        this.camera        = new Camera(viewportWidth, viewportHeight);
         this.notifications = new NotificationOverlay();
-        this.currentScene = Scene.MAIN_MENU;
+        this.currentScene  = Scene.MAIN_MENU;
     }
 
 
     public void transitionToGame(GameMap map) {
         this.currentScene = Scene.GAME;
+        // Calibrate minimap to the actual map dimensions
         minimap.calibrate(map.getWidth(), map.getHeight());
+        // Center camera on map
         camera.setMapPixelSize(
-                map.getWidth() * camera.getHexSize(),
+                map.getWidth()  * camera.getHexSize(),
                 map.getHeight() * camera.getHexSize()
         );
     }
@@ -62,63 +68,30 @@ public class ViewManager {
         return target;
     }
 
+
     public void notify(String message, GameRenderer.NotificationType type) {
         notifications.show(message, type);
     }
 
-    public void notifyStarvation() {
-        notifications.crisis("⚠ STARVATION — units losing AP!");
-    }
-
-    public void notifyLowFood() {
-        notifications.warning("Food supply running low");
-    }
-
-    public void notifyUnitCapHit() {
-        notifications.warning("Unit cap reached — build Town or Village");
-    }
-
+    public void notifyStarvation()  { notifications.crisis("⚠ STARVATION — units losing AP!"); }
+    public void notifyLowFood()     { notifications.warning("Food supply running low"); }
+    public void notifyUnitCapHit()  { notifications.warning("Unit cap reached — build Town or Village"); }
     public void notifyBuildDone(String buildingName) {
         notifications.success(buildingName + " constructed");
     }
 
-    public void selectUnit(Unit unit) {
-        unitPanel.selectUnit(unit);
-    }
 
-    public void clearSelection() {
-        unitPanel.clearSelection();
-    }
+    public void selectUnit(Unit unit) { unitPanel.selectUnit(unit); }
+    public void clearSelection()      { unitPanel.clearSelection(); }
 
-    public Scene getCurrentScene() {
-        return currentScene;
-    }
 
-    public MainMenu getMainMenu() {
-        return mainMenu;
-    }
+    public Scene    getCurrentScene()  { return currentScene; }
+    public MainMenu getMainMenu()      { return mainMenu; }
+    public Minimap  getMinimap()       { return minimap; }
+    public UnitPanel getUnitPanel()    { return unitPanel; }
+    public Camera   getCamera()        { return camera; }
+    public NotificationOverlay getNotifications() { return notifications; }
 
-    public Minimap getMinimap() {
-        return minimap;
-    }
-
-    public UnitPanel getUnitPanel() {
-        return unitPanel;
-    }
-
-    public Camera getCamera() {
-        return camera;
-    }
-
-    public NotificationOverlay getNotifications() {
-        return notifications;
-    }
-
-    public boolean isInGame() {
-        return currentScene == Scene.GAME;
-    }
-
-    public boolean isInMainMenu() {
-        return currentScene == Scene.MAIN_MENU;
-    }
+    public boolean isInGame()     { return currentScene == Scene.GAME; }
+    public boolean isInMainMenu() { return currentScene == Scene.MAIN_MENU; }
 }

@@ -4,6 +4,7 @@ import model.enums.BuildingType;
 import model.enums.Position;
 import model.enums.ResourceType;
 
+
 public class Stable extends ProductionBuilding {
 
     private static final int DEFAULT_RATE = 2;

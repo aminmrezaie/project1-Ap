@@ -5,6 +5,7 @@ import model.enums.Position;
 import model.enums.ResourceType;
 
 public class Village extends Building {
+
     public static final int UNIT_CAP_BONUS = 2;
 
     private static final int MAX_WORKERS = 0;

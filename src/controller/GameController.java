@@ -24,14 +24,11 @@ import view.swing.SwingGameRenderer;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GameController {
-
 
 
     private GameMap map;
     private Empire   empire;
-
 
 
     private final MapGenerator     mapGenerator;
@@ -63,10 +60,10 @@ public class GameController {
         this.mapGenerator     = new MapGenerator();
         this.fogOfWarSystem   = new FogOfWarSystem();
         this.movementSystem   = new MovementSystem(fogOfWarSystem);
-        this.buildingSystem   = new BuildingSystem();
+        this.upgradeSystem    = new UpgradeSystem();
+        this.buildingSystem   = new BuildingSystem(upgradeSystem);
         this.borderSystem     = new BorderSystem();
         this.productionSystem = new ProductionSystem();
-        this.upgradeSystem    = new UpgradeSystem();
         this.autoExploreAI    = new AutoExploreAI(movementSystem);
         this.turnManager      = new TurnManager(productionSystem, fogOfWarSystem);
 
@@ -91,7 +88,6 @@ public class GameController {
                 System.exit(0);
             }
             @Override public void onMusicVolumeChanged(float volume) {
-                // اتصال به AudioManager در صورت وجود
             }
         });
     }
@@ -164,9 +160,10 @@ public class GameController {
             case MOVE              -> doMove(pos);
             case BUILD_PLACEMENT   -> doBuild(pos);
             case EXPAND_BORDER     -> doExpandBorder(pos);
-            case NONE              -> { /* هیچ اقدامی منتظر نیست */ }
+            case NONE              -> {  }
         }
     }
+
 
 
     private void handleUnitAction(Action action, Unit unit) {
@@ -176,11 +173,7 @@ public class GameController {
                 List<Position> reachable = movementSystem.getReachablePositions(unit, map);
                 renderer.highlight(reachable, HighlightType.MOVEMENT_RANGE);
             }
-            case BUILD -> {
-                pendingMode = PendingMode.BUILD_PLACEMENT;
-                pendingBuildType = inferBuildType((Builder) unit);
-                renderer.highlight(List.of(unit.getPosition()), HighlightType.BUILD_TARGET);
-            }
+            case BUILD -> startBuildSelection((Builder) unit);
             case STATION -> doStation(unit);
             case UNSTATION -> doUnstation((Worker) unit);
             case EXPAND_BORDER -> {
@@ -210,6 +203,49 @@ public class GameController {
         }
     }
 
+    private void startBuildSelection(Builder builder) {
+        var hexOpt = map.getHex(builder.getPosition());
+        if (hexOpt.isEmpty()) {
+            renderer.showNotification("Invalid position", NotificationType.WARNING);
+            return;
+        }
+
+        List<BuildingType> options = viewManager.getUnitPanel().getAvailableBuildOptions(
+                hexOpt.get(),
+                upgradeSystem.isStoneTechUnlocked(),
+                upgradeSystem.isIronTechUnlocked()
+        );
+
+        if (options.isEmpty()) {
+            renderer.showNotification("Nothing can be built on this tile", NotificationType.WARNING);
+            return;
+        }
+
+        if (options.size() == 1) {
+            confirmBuildType(builder, options.get(0));
+            return;
+        }
+
+        BuildingType choice = (BuildingType) javax.swing.JOptionPane.showInputDialog(
+                renderer.getWindow(),
+                "Choose a building to construct:",
+                "Build",
+                javax.swing.JOptionPane.PLAIN_MESSAGE,
+                null,
+                options.toArray(),
+                options.get(0)
+        );
+
+        if (choice != null) {
+            confirmBuildType(builder, choice);
+        }
+    }
+
+    private void confirmBuildType(Builder builder, BuildingType type) {
+        pendingMode      = PendingMode.BUILD_PLACEMENT;
+        pendingBuildType = type;
+        renderer.highlight(List.of(builder.getPosition()), HighlightType.BUILD_TARGET);
+    }
 
     private void doBuild(Position pos) {
         if (!(selectedUnit instanceof Builder builder)) return;
@@ -222,23 +258,13 @@ public class GameController {
         if (built != null) {
             renderer.clearHighlights();
             pendingMode = PendingMode.NONE;
+            pendingBuildType = null;
             renderer.showNotification(built.getType().getDisplayName() + " constructed", NotificationType.SUCCESS);
             refreshSelection(selectedUnit);
             fullRender();
         } else {
             renderer.showNotification("Cannot build here", NotificationType.WARNING);
         }
-    }
-
-    private BuildingType inferBuildType(Builder builder) {
-        return map.getHex(builder.getPosition())
-                .map(h -> switch (h.getTerrain()) {
-                    case FOREST   -> BuildingType.LUMBER_MILL;
-                    case MOUNTAIN -> upgradeSystem.isStoneTechUnlocked() ? BuildingType.STONE_MINE : null;
-                    case FARMLAND -> BuildingType.FARM;
-                    case PLAIN    -> BuildingType.VILLAGE;
-                })
-                .orElse(null);
     }
 
 
@@ -265,6 +291,7 @@ public class GameController {
         refreshSelection(worker);
         fullRender();
     }
+
 
 
     private void doExpandBorder(Position center) {
@@ -337,7 +364,6 @@ public class GameController {
     }
 
 
-
     private void refreshSelection(Unit unit) {
         List<ActionButton> buttons = buildActionButtons(unit);
         renderer.selectUnit(unit, buttons);
@@ -348,3 +374,4 @@ public class GameController {
         renderer.renderHUD(empire, turnManager.getCurrentTurn());
     }
 }
+

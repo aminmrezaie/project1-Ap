@@ -4,13 +4,14 @@ import model.enums.BuildingType;
 import model.enums.Position;
 import model.enums.ResourceType;
 
+
 public class Town extends Building {
 
     public static final int UNIT_CAP_BONUS = 5;
 
-    private static final int MAX_WORKERS  = 0;
+    private static final int MAX_WORKERS = 0;
     private static final int UPKEEP_STONE = 1;
-    private static final int UPKEEP_WOOD  = 1;
+    private static final int UPKEEP_WOOD = 1;
 
     public Town(Position position) {
         super(BuildingType.TOWN, position);
@@ -49,4 +50,3 @@ public class Town extends Building {
         return UPKEEP_STONE;
     }
 }
-

@@ -3,7 +3,12 @@ package model.map;
 import model.enums.Position;
 import model.enums.TerrainType;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GameMap {
@@ -18,9 +23,11 @@ public class GameMap {
         this.hexes = new HashMap<>();
     }
 
+
     public void addHex(Hex hex) {
         hexes.put(hex.getPosition(), hex);
     }
+
 
     public Optional<Hex> getHex(Position pos) {
         return Optional.ofNullable(hexes.get(pos));
@@ -34,7 +41,8 @@ public class GameMap {
         return getHex(pos).map(Hex::isOwned).orElse(false);
     }
 
-    public boolean isBounds(Position pos) {
+
+    public boolean inBounds(Position pos) {
         return hexes.containsKey(pos);
     }
 
@@ -45,6 +53,7 @@ public class GameMap {
                 .collect(Collectors.toList());
     }
 
+
     public List<Hex> getHexesInRadius(Position center, int radius) {
         return center.positionsInRadius(radius).stream()
                 .map(hexes::get)
@@ -52,11 +61,13 @@ public class GameMap {
                 .collect(Collectors.toList());
     }
 
+
     public List<Hex> getVisibleHexes() {
         return hexes.values().stream()
                 .filter(Hex::isVisible)
                 .collect(Collectors.toList());
     }
+
 
     public List<Hex> getExploredHexes() {
         return hexes.values().stream()
@@ -64,17 +75,20 @@ public class GameMap {
                 .collect(Collectors.toList());
     }
 
+
     public List<Hex> getOwnedHexes() {
         return hexes.values().stream()
                 .filter(Hex::isOwned)
                 .collect(Collectors.toList());
     }
 
+
     public List<Hex> getHexesWithBuildings() {
         return hexes.values().stream()
                 .filter(Hex::hasBuilding)
                 .collect(Collectors.toList());
     }
+
 
     public List<Hex> getHexesByTerrain(TerrainType terrain) {
         return hexes.values().stream()

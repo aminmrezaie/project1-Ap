@@ -4,7 +4,7 @@ import model.enums.BuildingType;
 import model.enums.Position;
 import model.enums.ResourceType;
 
-public class IronMine extends ProductionBuilding{
+public class IronMine extends ProductionBuilding {
 
     private static final int DEFAULT_RATE = 1;
     private static final int MAX_WORKERS  = 3;

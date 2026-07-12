@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 public class MovementSystem {
 
     private final FogOfWarSystem fogSystem;
@@ -29,19 +28,17 @@ public class MovementSystem {
         UNIT_DEAD
     }
 
-
     public MoveResult validate(Unit unit, Position dest, GameMap map) {
-        if (!unit.isAlive()) return MoveResult.UNIT_DEAD;
+        if (!unit.isAlive())              return MoveResult.UNIT_DEAD;
         if (unit instanceof Worker w && w.isStationed()) return MoveResult.WORKER_STATIONED;
-        if (!map.inBounds(dest)) return MoveResult.OUT_OF_BOUNDS;
+        if (!map.inBounds(dest))          return MoveResult.OUT_OF_BOUNDS;
         if (!isAdjacent(unit.getPosition(), dest)) return MoveResult.NOT_ADJACENT;
 
         int cost = getMoveCost(map, dest);
-        if (!unit.hasAP(cost)) return MoveResult.NOT_ENOUGH_AP;
+        if (!unit.hasAP(cost))            return MoveResult.NOT_ENOUGH_AP;
 
         return MoveResult.OK;
     }
-
 
     public boolean executeMove(Unit unit, Position dest, GameMap map) {
         if (validate(unit, dest, map) != MoveResult.OK) return false;
@@ -54,7 +51,6 @@ public class MovementSystem {
         }
         return moved;
     }
-
 
     public List<Position> getReachablePositions(Unit unit, GameMap map) {
         List<Position> result = new ArrayList<>();

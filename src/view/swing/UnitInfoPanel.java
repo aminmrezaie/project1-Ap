@@ -14,17 +14,18 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class UnitInfoPanel extends JPanel {
+
+    private static final long serialVersionUID = 1L;
 
     private static final int HEIGHT = 90;
 
 
-    private final JLabel unitNameLabel;
-    private final JLabel unitStatusLabel;
-    private final JPanel apBarPanel;
-    private final JPanel actionButtonsPanel;
-    private final JLabel emptyLabel;
+    private final JLabel  unitNameLabel;
+    private final JLabel  unitStatusLabel;
+    private final JPanel  apBarPanel;
+    private final JPanel  actionButtonsPanel;
+    private final JLabel  emptyLabel;
 
     private final Map<JButton, Action> buttonActions = new HashMap<>();
 
@@ -45,7 +46,7 @@ public class UnitInfoPanel extends JPanel {
         JPanel infoPanel = new JPanel(new GridLayout(2, 1, 0, 2));
         infoPanel.setOpaque(false);
         infoPanel.setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 0));
-        unitNameLabel = styledLabel("", GameWindow.GOLD, 14, Font.BOLD);
+        unitNameLabel   = styledLabel("", GameWindow.GOLD, 14, Font.BOLD);
         unitStatusLabel = styledLabel("", GameWindow.TEXT_DIM, 11, Font.PLAIN);
         infoPanel.add(unitNameLabel);
         infoPanel.add(unitStatusLabel);
@@ -53,10 +54,8 @@ public class UnitInfoPanel extends JPanel {
         actionButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 16));
         actionButtonsPanel.setOpaque(false);
 
-
         apBarPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
+            @Override protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
             }
         };
@@ -68,16 +67,13 @@ public class UnitInfoPanel extends JPanel {
         leftAndCenter.add(infoPanel, BorderLayout.WEST);
         leftAndCenter.add(actionButtonsPanel, BorderLayout.CENTER);
 
-
     }
 
 
     public void showUnit(Unit unit, java.util.List<ActionButton> buttons) {
         removeAll();
 
-
         unitNameLabel.setText(unit.getType().getDisplayName() + "  #" + unit.getId());
-
 
         unitStatusLabel.setText(buildStatusText(unit));
 
@@ -103,7 +99,7 @@ public class UnitInfoPanel extends JPanel {
         leftAndCenter.add(actionButtonsPanel, BorderLayout.CENTER);
 
         add(leftAndCenter, BorderLayout.CENTER);
-        add(apDisplay, BorderLayout.EAST);
+        add(apDisplay,     BorderLayout.EAST);
 
         revalidate();
         repaint();
@@ -164,10 +160,10 @@ public class UnitInfoPanel extends JPanel {
                 g2.fillRoundRect(x, y, w, h, 6, 6);
 
                 float ratio = unit.getMaxAP() == 0 ? 0 : (float) unit.getAP() / unit.getMaxAP();
-                int fill = (int) (w * ratio);
+                int fill = (int)(w * ratio);
                 Color c = ratio > 0.6f ? new Color(0x44ff88)
                         : ratio > 0.3f ? new Color(0xffdd00)
-                        : new Color(0xff4444);
+                        :                new Color(0xff4444);
                 g2.setColor(c);
                 g2.fillRoundRect(x, y, fill, h, 6, 6);
 
@@ -215,7 +211,5 @@ public class UnitInfoPanel extends JPanel {
         return lbl;
     }
 
-    public void setListener(UnitPanel.PanelListener l) {
-        this.listener = l;
-    }
+    public void setListener(UnitPanel.PanelListener l) { this.listener = l; }
 }

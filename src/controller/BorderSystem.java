@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 public class BorderSystem {
 
     public enum ExpandResult {
@@ -23,8 +22,8 @@ public class BorderSystem {
 
     public ExpandResult validate(BorderExpander expander,
                                  Position targetCenter, GameMap map) {
-        if (!expander.isAlive()) return ExpandResult.UNIT_DEAD;
-        if (!expander.hasAP(2)) return ExpandResult.NOT_ENOUGH_AP;
+        if (!expander.isAlive())      return ExpandResult.UNIT_DEAD;
+        if (!expander.hasAP(2))       return ExpandResult.NOT_ENOUGH_AP;
 
         for (Position pos : targetCenter.positionsInRadius(1)) {
             Optional<Hex> hex = map.getHex(pos);

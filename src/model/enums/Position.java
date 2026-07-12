@@ -11,8 +11,8 @@ public class Position {
     private final int r;
 
     private static final int[][] DIRECTIONS = {
-            {+1, 0}, {+1, -1}, {0, -1},
-            {-1, 0}, {-1, +1}, {0, +1}
+            {+1,  0}, {+1, -1}, { 0, -1},
+            {-1,  0}, {-1, +1}, { 0, +1}
     };
 
     public Position(int q, int r) {
@@ -32,7 +32,6 @@ public class Position {
         return -q - r;
     }
 
-
     public List<Position> neighbors() {
         List<Position> result = new ArrayList<>(6);
         for (int[] dir : DIRECTIONS) {
@@ -40,7 +39,6 @@ public class Position {
         }
         return result;
     }
-
 
     public int distanceTo(Position other) {
         return (Math.abs(q - other.q)
